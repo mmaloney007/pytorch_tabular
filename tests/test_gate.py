@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """Tests for `pytorch_tabular` package."""
+
 import pytest
+
 from pytorch_tabular import TabularModel
 from pytorch_tabular.config import DataConfig, OptimizerConfig, TrainerConfig
 from pytorch_tabular.models import GatedAdditiveTreeEnsembleConfig
@@ -83,6 +85,7 @@ def test_regression(
     assert pred_df.shape[0] == test.shape[0]
 
 
+@pytest.mark.parametrize("multi_target", [False, True])
 @pytest.mark.parametrize(
     "continuous_cols",
     [
@@ -94,6 +97,7 @@ def test_regression(
 @pytest.mark.parametrize("normalize_continuous_features", [True])
 def test_classification(
     classification_data,
+    multi_target,
     continuous_cols,
     categorical_cols,
     continuous_feature_transform,
@@ -101,7 +105,7 @@ def test_classification(
 ):
     (train, test, target) = classification_data
     data_config = DataConfig(
-        target=target,
+        target=target + ["feature_53"] if multi_target else target,
         continuous_cols=continuous_cols,
         categorical_cols=categorical_cols,
         continuous_feature_transform=continuous_feature_transform,

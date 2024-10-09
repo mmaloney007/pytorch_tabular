@@ -4,11 +4,12 @@
 import numpy as np
 import pytest
 import torch
+from sklearn.preprocessing import PowerTransformer
+
 from pytorch_tabular import TabularModel
 from pytorch_tabular.categorical_encoders import CategoricalEmbeddingTransformer
 from pytorch_tabular.config import DataConfig, OptimizerConfig, TrainerConfig
 from pytorch_tabular.models import CategoryEmbeddingModelConfig
-from sklearn.preprocessing import PowerTransformer
 
 
 def fake_metric(y_hat, y):
@@ -123,6 +124,7 @@ def test_regression(
     assert pred_df.shape[0] == test.shape[0]
 
 
+@pytest.mark.parametrize("multi_target", [False, True])
 @pytest.mark.parametrize(
     "continuous_cols",
     [
@@ -135,6 +137,7 @@ def test_regression(
 @pytest.mark.parametrize("normalize_continuous_features", [True])
 def test_classification(
     classification_data,
+    multi_target,
     continuous_cols,
     categorical_cols,
     continuous_feature_transform,
@@ -145,7 +148,7 @@ def test_classification(
         return
 
     data_config = DataConfig(
-        target=target,
+        target=target + ["feature_53"] if multi_target else target,
         continuous_cols=continuous_cols,
         categorical_cols=categorical_cols,
         continuous_feature_transform=continuous_feature_transform,
