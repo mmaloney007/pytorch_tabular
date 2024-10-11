@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """Tests for `pytorch_tabular` package."""
 
+import sys
+
 import numpy as np
 import pytest
 from sklearn.model_selection import train_test_split
@@ -9,7 +11,10 @@ from sklearn.preprocessing import PowerTransformer
 from pytorch_tabular import TabularModel
 from pytorch_tabular.config import DataConfig, OptimizerConfig, TrainerConfig
 from pytorch_tabular.models import CategoryEmbeddingModelConfig
-from pytorch_tabular.tabular_datamodule import TabularDatamodule
+
+# Import the TabularDatamodule and TabularDataset from your local file
+sys.path.insert(0, "/Users/maloney/Documents/GitHub/pytorch_tabular_soren/src/pytorch_tabular")
+from tabular_datamodule import TabularDatamodule
 
 
 @pytest.mark.parametrize("multi_target", [True, False])
